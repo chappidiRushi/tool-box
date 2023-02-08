@@ -10,6 +10,22 @@ const vscode = require('vscode');
  */
 function activate(context) {
 
+	function getInterfaceName(text) {
+		var regex = /interface\s+(\w+)\s+{/g;
+		var match = regex.exec(text);
+		let interfaceName = "";
+		if (match) {
+			interfaceName = match[1];
+		}
+		return interfaceName || ""
+	}
+	function removeSpacesAndLines(text) {
+		return text.replace(/(\n|\s)/g, '');
+	}
+	function parseInterfaceToArray(text) {
+		const extractedText = text.match(/\{(.*)\}/)[1];
+		return extractedText.split(';');
+	}
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulatiocommandns, your extension "tool-box" is now active!');
@@ -17,7 +33,7 @@ function activate(context) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('tool-box.toolBox', async function () {
+	let disposable = vscode.commands.registerCommand('tool-box.int2func', async function () {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
@@ -30,15 +46,9 @@ function activate(context) {
 			var text = editor.document.getText(selection);
 			var actualText = text;
 			// get interface name
-			var regex = /interface\s+(\w+)\s+{/g;
-			var match = regex.exec(text);
-			let interfaceName = "";
-			if (match) {
-				interfaceName = match[1];
-			}
-			const formattedText = text.replace(/(\n|\s)/g, '');
-			const extractedText = formattedText.match(/\{(.*)\}/)[1];
-			const splitText = extractedText.split(';');
+			let interfaceName = getInterfaceName(text);
+			const formattedText = removeSpacesAndLines(text)
+			const splitText = parseInterfaceToArray(formattedText);
 			let updatedText = [];
 			splitText.forEach(text => {
 				if (text != '' && text.includes(':')) {

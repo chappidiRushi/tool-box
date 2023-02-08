@@ -2,6 +2,9 @@
   "name": "tool-box",
   "displayName": "Tool Box",
   "description": "extension for useful tools",
+  "repository": {"url": "https://github.com/chappidiRushi/tool-box"},
+  "publisher": "Rushi",
+  "icon": "images/tool-box-logo.png",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.75.0"
@@ -13,22 +16,13 @@
     "onCommand:tool-box.toolBox"
   ],
   "main": "./extension.js",
-  "enabledApiProposals": ["contribEditorContentMenu"],
   "contributes": {
     "commands": [
       {
-        "command": "tool-box.toolBox",
-        "title": "Hello World"
+        "command": "tool-box.int2func",
+        "title": "Convert to InterfaceFunction"
       }
-    ],
-    "menus": {
-      "editor/content": [
-        {
-          "command": "too-box.toolBox",
-          "group": "toolBox"
-        }
-      ]
-    }
+    ]
   },
   "scripts": {
     "lint": "eslint .",
