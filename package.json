@@ -5,7 +5,7 @@
   "repository": {"url": "https://github.com/chappidiRushi/tool-box"},
   "publisher": "Rushi",
   "icon": "images/tool-box-logo.png",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -21,6 +21,10 @@
       {
         "command": "tool-box.int2func",
         "title": "Convert to InterfaceFunction"
+      },
+      {
+        "command": "tool-box.allInt2func",
+        "title": "Convert all interfaces to functions"
       }
     ]
   },
