@@ -5,7 +5,7 @@
   "repository": {"url": "https://github.com/chappidiRushi/tool-box"},
   "publisher": "Rushi",
   "icon": "images/tool-box-logo.png",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -13,7 +13,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:tool-box.toolBox"
+    "onStartupFinished"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -25,6 +25,10 @@
       {
         "command": "tool-box.allInt2func",
         "title": "Convert all interfaces to functions"
+      },
+      {
+        "command": "tool-box.restartApp",
+        "title": "restart application"
       }
     ]
   },

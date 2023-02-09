@@ -107,9 +107,21 @@ function activate(context) {
 			console.log(`some error in the code`);
 		}
 	});
+	let restart = vscode.commands.registerCommand('tool-box.restartApp', async function () {
+		vscode.window.showErrorMessage('button clicked');
+		vscode.commands.executeCommand("workbench.action.reloadWindow").then(() => {
+			console.log('app restarted');
+		})
+	})
 	
+	const myButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
+	myButton.command = 'tool-box.restartApp';
+	myButton.text = 'restart app';
+	myButton.tooltip = 'restart the vscode application';
+	// myButton.
+	myButton.show();
 
-	context.subscriptions.push(disposable, allInterFaces);
+	context.subscriptions.push(disposable, allInterFaces, restart);
 }
 function deactivate() { }
 
