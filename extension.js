@@ -47,7 +47,7 @@ function activate(context) {
 			}
 		});
 		let finalBuild = `${actualText}
-		function objTo${interfaceName}(data: any):${interfaceName} {
+		export function objTo${interfaceName}(data: any):${interfaceName} {
   			const resp:${interfaceName} = {${updatedText.join(', \n ')}};
   			return resp;
 		};
@@ -108,20 +108,29 @@ function activate(context) {
 		}
 	});
 	let restart = vscode.commands.registerCommand('tool-box.restartApp', async function () {
-		vscode.window.showErrorMessage('button clicked');
 		vscode.commands.executeCommand("workbench.action.reloadWindow").then(() => {
 			console.log('app restarted');
 		})
 	})
+	let terminal = vscode.commands.registerCommand('tool-box.openTerminal', async function () {
+		vscode.commands.executeCommand("workbench.action.terminal.openNativeConsole").then(() => {
+		})
+	})
 	
-	const myButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
-	myButton.command = 'tool-box.restartApp';
-	myButton.text = 'restart app';
-	myButton.tooltip = 'restart the vscode application';
-	// myButton.
-	myButton.show();
+	const restartButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
+	restartButton.command = 'tool-box.restartApp';
+	restartButton.text = 'restart app';
+	restartButton.tooltip = 'restart the vscode application';
+	// restartButton.
+	restartButton.show();
+	const openTerminal = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
+	openTerminal.command = 'tool-box.openTerminal';
+	openTerminal.text = 'open terminal';
+	openTerminal.tooltip = 'open external terminal';
+	// openTerminal.
+	openTerminal.show();
 
-	context.subscriptions.push(disposable, allInterFaces, restart);
+	context.subscriptions.push(disposable, allInterFaces, restart,terminal);
 }
 function deactivate() { }
 

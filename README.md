@@ -6,8 +6,7 @@ creates interfaceFunction from interface
 
 ## Release Notes
 
-Added functionality to create functions for interfaces
+* Added functionality to create functions for interfaces
 
-## Working with Markdown
-
-VS code extension for typescript
+* Added App restart button In the status bar
+* Added Open external terminal button in the status bar

@@ -5,7 +5,7 @@
   "repository": {"url": "https://github.com/chappidiRushi/tool-box"},
   "publisher": "Rushi",
   "icon": "images/tool-box-logo.png",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -29,13 +29,18 @@
       {
         "command": "tool-box.restartApp",
         "title": "restart application"
+      },
+      {
+        "command": "tool-box.openTerminal",
+        "title": "Open external terminal"
       }
     ]
   },
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "node ./test/runTest.js"
+    "test": "node ./test/runTest.js",
+    "build": "vsce package"
   },
   "devDependencies": {
     "@types/vscode": "^1.75.0",
