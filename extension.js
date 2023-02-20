@@ -1,4 +1,5 @@
 
+const { config } = require('process');
 const vscode = require('vscode');
 function activate(context) {
 	function getInterfaceName(text) {
@@ -33,23 +34,23 @@ function activate(context) {
 				let textArr = text.split(':');
 				let dataType = textArr[1];
 				let key = (textArr[0].endsWith('?')) ? textArr[0].slice(0, -1) : textArr[0];
-				if (['boolean', 'string', 'number', 'object', 'string[]', 'any[]', 'number[]', 'object[]'].includes(dataType)) {
+        if (['boolean', 'string', 'null', 'number', 'object', 'string[]', 'any[]', 'number[]', 'object[]'].includes(dataType)) {
 					updatedText.push(`${key} : data.${key}`);
 				} else if (dataType.endsWith('[]')) {
 					updatedText.push(
-						`${key}:data.${key}?.forEach((element: any)=> objTo${dataType}(element))`);
+            `${key}:data.${key}?.forEach((element: any)=> objTo${dataType.substr(0, dataType.length - 2)}(element))`);
 				} else if (dataType.includes('Array')) {
 					updatedText.push(`${key} : undefined`);
 				}
 				else if (!dataType.endsWith('[]') && !'number string boolean undefined null number []'.includes(dataType)) {
-					updatedText.push(`${key} : objTo${key.charAt(0).toUpperCase() + key.substring(1)}(data.${key})`);
+          updatedText.push(`${key} : objTo${dataType}(data.${key})`);
 				}
 			}
 		});
 		let finalBuild = `${actualText}
 		export function objTo${interfaceName}(data: any):${interfaceName} {
   			const resp:${interfaceName} = {${updatedText.join(', \n ')}};
-  			return resp;
+  			return resp
 		};
 		`;
 		editor.edit(editBuilder => {
@@ -112,29 +113,61 @@ function activate(context) {
 			console.log('app restarted');
 		})
 	})
-	let terminal = vscode.commands.registerCommand('tool-box.openTerminal', async function () {
+  let runCommands = vscode.commands.registerCommand('tool-box.runCommands', async function () {
+    runTerminalCommands();
+  })
+	let openTerminal = vscode.commands.registerCommand('tool-box.openTerminal', async function () {
 		vscode.commands.executeCommand("workbench.action.terminal.openNativeConsole").then(() => {
 		})
-	})
-	
-	const restartButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
-	restartButton.command = 'tool-box.restartApp';
-	restartButton.text = 'restart app';
-	restartButton.tooltip = 'restart the vscode application';
-	// restartButton.
-	restartButton.show();
-	const openTerminal = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
-	openTerminal.command = 'tool-box.openTerminal';
-	openTerminal.text = 'open terminal';
-	openTerminal.tooltip = 'open external terminal';
-	// openTerminal.
-	openTerminal.show();
-
-	context.subscriptions.push(disposable, allInterFaces, restart,terminal);
+  })  
+  const terminalOnStartUp = vscode.workspace.getConfiguration('tool-box').get('runTerminalOnStartUp');
+  if (terminalOnStartUp) {
+    runTerminalCommands();
+  }
+  createButtons();
+  context.subscriptions.push(disposable, allInterFaces, restart, openTerminal, runCommands);
 }
 function deactivate() { }
 
 module.exports = {
-	activate,
-	deactivate
+  activate,
+  deactivate
 };
+function runTerminalCommands() {
+  const config = vscode.workspace.getConfiguration('tool-box').get('runTerminal');
+  if (Array.isArray(config)) {
+    config.forEach((conf) => {
+      let terminal = vscode.window.createTerminal(conf.name, conf.executionPath,);
+      terminal.sendText(conf.commands);
+      terminal.show();
+    });
+  }
+}
+
+function createButtons() {
+  const buttonConfig = vscode.workspace.getConfiguration('tool-box').get('buttonsVisibility');
+  console.log("🚀 ~ file: extension.js:146 ~ createButtons ~ buttonConfig:", buttonConfig);
+  buttonConfig;
+  if (buttonConfig.restartBtn) {
+    const restartButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
+    restartButton.command = 'tool-box.restartApp';
+    restartButton.text = 'restart app';
+    restartButton.tooltip = 'restart the vscode application';
+    restartButton.show();
+  }
+
+  if (buttonConfig.openTerminalBtn) {
+    const openTerminalBtn = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
+    openTerminalBtn.command = 'tool-box.openTerminal';
+    openTerminalBtn.text = 'open terminal';
+    openTerminalBtn.tooltip = 'open external terminal';
+    openTerminalBtn.show();
+  }
+  if (buttonConfig.executeCommands) {
+    const executeCommands = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
+    executeCommands.command = 'tool-box.runCommands';
+    executeCommands.text = 'Exec Cmds';
+    executeCommands.tooltip = 'Run Commands';
+    executeCommands.show();
+  }
+}

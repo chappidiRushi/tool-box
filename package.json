@@ -2,10 +2,12 @@
   "name": "tool-box",
   "displayName": "Tool Box",
   "description": "extension for useful tools",
-  "repository": {"url": "https://github.com/chappidiRushi/tool-box"},
+  "repository": {
+    "url": "https://github.com/chappidiRushi/tool-box"
+  },
   "publisher": "Rushi",
   "icon": "images/tool-box-logo.png",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -34,7 +36,70 @@
         "command": "tool-box.openTerminal",
         "title": "Open external terminal"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Start Terminal",
+      "properties": {
+        "tool-box.runTerminalOnStartUp": {
+          "title": "Start Terminal On start up",
+          "default": true
+        },
+        "tool-box.terminalCommands": {
+          "type": "array",
+          "default": [
+            {
+              "runOnStartUp": true,
+              "commands": ""
+            }
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "runOnStartUp": {
+                "type": "boolean",
+                "description": "Should start this command on start up"
+              },
+              "name": {
+                "type": "string",
+                "description": "Terminal Name"
+              },
+              "executionPath": {
+                "type": "string",
+                "description": "Terminal execution path"
+              },
+              "commands": {
+                "type": "string",
+                "commands": "Commands should run"
+              }
+            }
+          },
+          "description": "Terminal Commands Array"
+        },
+        "tool-box.buttonsVisibility": {
+          "type": "object",
+          "default": {
+            "RestartBtn": true,
+            "openTerminalBtn": true,
+            "executeCommands": true
+          },
+          "properties": {
+            "RestartBtn": {
+              "type": "boolean",
+              "description": "Show Restart Button in toolbar"
+            },
+            "openTerminalBtn": {
+              "type": "boolean",
+              "description": "Show Open Terminal Button in toolbar"
+            },
+            "executeCommands": {
+              "type": "boolean",
+              "description": "Show Execute commands button in toolbar"
+            }
+          },
+          "description": "Toggle Buttons visibility"
+        }
+      }
+    }
   },
   "scripts": {
     "lint": "eslint .",
