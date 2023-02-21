@@ -7,7 +7,7 @@
   },
   "publisher": "Rushi",
   "icon": "images/tool-box-logo.png",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "engines": {
     "vscode": "^1.75.0"
   },
