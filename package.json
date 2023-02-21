@@ -35,6 +35,10 @@
       {
         "command": "tool-box.openTerminal",
         "title": "Open external terminal"
+      },
+      {
+        "command": "tool-box.runCommands",
+        "title": "Open execution commands"
       }
     ],
     "configuration": {
@@ -42,6 +46,10 @@
       "properties": {
         "tool-box.runTerminalOnStartUp": {
           "title": "Start Terminal On start up",
+          "default": true
+        },
+        "tool-box.startDebuggerOnStartUp": {
+          "title": "Start Debugger On Start Up",
           "default": true
         },
         "tool-box.terminalCommands": {

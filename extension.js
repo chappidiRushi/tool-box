@@ -125,6 +125,10 @@ function activate(context) {
     runTerminalCommands();
   }
   createButtons();
+  const startDebugOnStartUp = vscode.workspace.getConfiguration('tool-box').get('startDebuggerOnStartUp');
+  if (startDebugOnStartUp) {
+    vscode.commands.executeCommand("workbench.action.debug.start").then(() => { });
+  }
   context.subscriptions.push(disposable, allInterFaces, restart, openTerminal, runCommands);
 }
 function deactivate() { }
