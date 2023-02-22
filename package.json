@@ -7,7 +7,7 @@
   },
   "publisher": "Rushi",
   "icon": "images/tool-box-logo.png",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -46,11 +46,11 @@
       "properties": {
         "tool-box.runTerminalOnStartUp": {
           "title": "Start Terminal On start up",
-          "default": true
+          "default": false
         },
         "tool-box.startDebuggerOnStartUp": {
           "title": "Start Debugger On Start Up",
-          "default": true
+          "default": false
         },
         "tool-box.terminalCommands": {
           "type": "array",

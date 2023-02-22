@@ -138,7 +138,7 @@ module.exports = {
   deactivate
 };
 function runTerminalCommands() {
-  const config = vscode.workspace.getConfiguration('tool-box').get('runTerminal');
+  const config = vscode.workspace.getConfiguration('tool-box').get('terminalCommands');
   if (Array.isArray(config)) {
     config.forEach((conf) => {
       let terminal = vscode.window.createTerminal(conf.name, conf.executionPath,);
