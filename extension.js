@@ -115,7 +115,30 @@ function activate(context) {
 	})
   let runCommands = vscode.commands.registerCommand('tool-box.runCommands', async function () {
     runTerminalCommands();
-  })
+	})
+
+	let toggleFileVisibility = vscode.commands.registerCommand('tool-box.toggleFileVisibility', async function () {
+		try {
+			const config = vscode.workspace.getConfiguration('tool-box');
+			const filesToToggleVisibility = config.get('FilesToToggle', []);
+
+			const visibleFiles = vscode.workspace.getConfiguration('files').get('exclude', {});
+			const newVisibleFiles = Object.assign({}, visibleFiles);
+
+			filesToToggleVisibility.forEach(file => {
+				newVisibleFiles[file] = !newVisibleFiles[file];
+			});
+
+			vscode.workspace.getConfiguration('files').update('exclude', newVisibleFiles, vscode.ConfigurationTarget.Workspace);
+
+		} catch (error) {
+			console.error(error)
+		}
+	})
+	
+
+
+
 	let openTerminal = vscode.commands.registerCommand('tool-box.openTerminal', async function () {
 		vscode.commands.executeCommand("workbench.action.terminal.openNativeConsole").then(() => {
 		})
@@ -129,7 +152,7 @@ function activate(context) {
   if (startDebugOnStartUp) {
     vscode.commands.executeCommand("workbench.action.debug.start").then(() => { });
   }
-  context.subscriptions.push(disposable, allInterFaces, restart, openTerminal, runCommands);
+	context.subscriptions.push(disposable, allInterFaces, restart, openTerminal, runCommands, toggleFileVisibility);
 }
 function deactivate() { }
 
@@ -173,5 +196,12 @@ function createButtons() {
     executeCommands.text = 'Exec Cmds';
     executeCommands.tooltip = 'Run Commands';
     executeCommands.show();
-  }
+	}
+	if (buttonConfig.FileVisibility){
+		const toggleFileVisibility = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 0);
+		toggleFileVisibility.command = 'tool-box.toggleFileVisibility';
+		toggleFileVisibility.text = 'Toggle File Visibility';
+		toggleFileVisibility.tooltip = 'Toggle File Visibility';
+		toggleFileVisibility.show();
+	}
 }

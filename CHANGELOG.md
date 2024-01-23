@@ -1,9 +1,15 @@
 # Change Log
 
-All notable changes to the "tool-box" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Initial release
+### Added
+
+- Initial release of the extension.
+
+## [0.0.9] - 2024-01-19
+
+### Added
+
+- Toggle file visibility feature.
