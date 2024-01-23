@@ -74,7 +74,7 @@ function activate(context) {
 	function findInterfacesInText(text) {
 		return text.match(/interface\s+(\w+)\s*\{[\s\S]*?\}/g);
 	}
-	
+	// converting an interface to function
 	let disposable = vscode.commands.registerCommand('tool-box.int2func', async function () {
 		var editor = vscode.window.activeTextEditor;
 		if (!editor) {
@@ -88,6 +88,7 @@ function activate(context) {
 		}
 	});
 	
+	// converting all interfaces to function
 	let allInterFaces = vscode.commands.registerCommand('tool-box.allInt2func', async function () {
 		var editor = vscode.window.activeTextEditor;
 		if (!editor) {
@@ -108,28 +109,38 @@ function activate(context) {
 			console.log(`some error in the code`);
 		}
 	});
+
+	// restart application
 	let restart = vscode.commands.registerCommand('tool-box.restartApp', async function () {
 		vscode.commands.executeCommand("workbench.action.reloadWindow").then(() => {
 			console.log('app restarted');
 		})
 	})
+
+	// run terminal commands
   let runCommands = vscode.commands.registerCommand('tool-box.runCommands', async function () {
     runTerminalCommands();
 	})
 
+	// Toglle files visibility
 	let toggleFileVisibility = vscode.commands.registerCommand('tool-box.toggleFileVisibility', async function () {
 		try {
 			const config = vscode.workspace.getConfiguration('tool-box');
 			const filesToToggleVisibility = config.get('FilesToToggle', []);
 
+			if (!filesToToggleVisibility || filesToToggleVisibility.length === 0) {
+				vscode.window.showErrorMessage('No files to toggle visibility');
+				return;
+			}
+
 			const visibleFiles = vscode.workspace.getConfiguration('files').get('exclude', {});
-			const newVisibleFiles = Object.assign({}, visibleFiles);
-
+			const filesAreAlreadyVisible = filesToToggleVisibility.filter(file => visibleFiles[file]);
+			const toggleTo = (filesAreAlreadyVisible.length >= filesToToggleVisibility.length - filesAreAlreadyVisible.length) ? false : true;
+			const toggledVisibility = Object.assign({}, visibleFiles);
 			filesToToggleVisibility.forEach(file => {
-				newVisibleFiles[file] = !newVisibleFiles[file];
+				toggledVisibility[file] = toggleTo;
 			});
-
-			vscode.workspace.getConfiguration('files').update('exclude', newVisibleFiles, vscode.ConfigurationTarget.Workspace);
+			vscode.workspace.getConfiguration('files').update('exclude', toggledVisibility, vscode.ConfigurationTarget.Workspace);
 
 		} catch (error) {
 			console.error(error)
@@ -138,21 +149,55 @@ function activate(context) {
 	
 
 
-
+// opens external terminal
 	let openTerminal = vscode.commands.registerCommand('tool-box.openTerminal', async function () {
 		vscode.commands.executeCommand("workbench.action.terminal.openNativeConsole").then(() => {
 		})
-  })  
+	})  
+	
+	// Run terminal commands on startup
   const terminalOnStartUp = vscode.workspace.getConfiguration('tool-box').get('runTerminalOnStartUp');
   if (terminalOnStartUp) {
     runTerminalCommands();
-  }
-  createButtons();
+	}
+	// creating the toolbar buttons on startup
+	createButtons();
+	
+	// start debugger on app startup
   const startDebugOnStartUp = vscode.workspace.getConfiguration('tool-box').get('startDebuggerOnStartUp');
   if (startDebugOnStartUp) {
     vscode.commands.executeCommand("workbench.action.debug.start").then(() => { });
-  }
-	context.subscriptions.push(disposable, allInterFaces, restart, openTerminal, runCommands, toggleFileVisibility);
+	}
+
+	// Add file to ignore list
+	const addFileToHideList = vscode.commands.registerCommand('tool-box.addFileToToggleVisibility', (uri, another) => {
+		// 'uri' will contain information about the file that was right-clicked
+		const filePath = vscode.workspace.asRelativePath(uri);
+
+		// Get the current ignoreFileList from settings.json
+		const config = vscode.workspace.getConfiguration('tool-box');
+		let ignoreFileList = config.get('FilesToToggle') || [];
+
+		// Check if the file is already in the ignoreFileList
+		if (!ignoreFileList.includes(filePath)) {
+			// Add the file to the ignoreFileList
+			ignoreFileList.push(filePath);
+
+			if (!config.has('ignoreFileList')) {
+				// Create ignoreFileList if it doesn't exist
+				config.update('ignoreFileList', [], vscode.ConfigurationTarget.Workspace);
+			}
+			// Update the ignoreFileList in settings.json
+			config.update('FilesToToggle', ignoreFileList, vscode.ConfigurationTarget.Workspace);
+			vscode.window.showInformationMessage(`Added ${filePath} to prop-tool-box.ignoreFileList`);
+		} else {
+			vscode.window.showInformationMessage(`${filePath} is already in prop-tool-box.ignoreFileList`);
+		}
+
+	});
+
+
+	context.subscriptions.push(disposable, allInterFaces, restart, openTerminal, runCommands, toggleFileVisibility, addFileToHideList);
 }
 function deactivate() { }
 
