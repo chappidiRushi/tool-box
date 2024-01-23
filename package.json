@@ -7,7 +7,7 @@
   },
   "publisher": "Rushi",
   "icon": "images/tool-box-logo.png",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -20,6 +20,10 @@
   "main": "./extension.js",
   "contributes": {
     "commands": [
+      {
+        "command": "tool-box.addFileToToggleVisibility",
+        "title": "Add File to Visibility List"
+      },
       {
         "command": "tool-box.int2func",
         "title": "Convert to InterfaceFunction"
@@ -41,10 +45,18 @@
         "title": "Open execution commands"
       },
       {
-        "command": "extension.toggleFileVisibility",
+        "command": "tool-box.toggleFileVisibility",
         "title": "Toggle File Visibility"
       }
     ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "tool-box.addFileToToggleVisibility",
+          "group": "navigation"
+        }
+      ]
+    },
     "configuration": {
       "title": "Start Terminal",
       "properties": {
