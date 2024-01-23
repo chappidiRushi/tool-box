@@ -7,7 +7,7 @@
   },
   "publisher": "Rushi",
   "icon": "images/tool-box-logo.png",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -39,6 +39,10 @@
       {
         "command": "tool-box.runCommands",
         "title": "Open execution commands"
+      },
+      {
+        "command": "extension.toggleFileVisibility",
+        "title": "Toggle File Visibility"
       }
     ],
     "configuration": {
@@ -83,12 +87,17 @@
           },
           "description": "Terminal Commands Array"
         },
+        "tool-box.FilesToToggle":{
+          "type": "array",
+          "default": ["**/node_modules"]
+        },
         "tool-box.buttonsVisibility": {
           "type": "object",
           "default": {
             "RestartBtn": true,
             "openTerminalBtn": true,
-            "executeCommands": true
+            "executeCommands": true,
+            "FileVisibility": true
           },
           "properties": {
             "RestartBtn": {
@@ -102,6 +111,10 @@
             "executeCommands": {
               "type": "boolean",
               "description": "Show Execute commands button in toolbar"
+            },
+            "FileVisibility": {
+              "type": "boolean",
+              "description": "Show File Visibility button in toolbar"
             }
           },
           "description": "Toggle Buttons visibility"
